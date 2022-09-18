@@ -15,12 +15,12 @@ package main
 import "fmt"
 
 func matrixMultiplication(firstMatrix, secondMatrix Matrix) Matrix { // умножает матрицу на матрицу; возвращает результат
-	var result Matrix                                      // переменная в которую сохраним результат умножения
-	result.prepareToFill(firstMatrix.m(), firstMatrix.n()) // создаем свободное место для элементов матрицы
+	var result Matrix                                       // переменная в которую сохраним результат умножения
+	result.prepareToFill(firstMatrix.m(), secondMatrix.n()) // создаем свободное место для элементов матрицы
 
 	for m := range result { // непосредственно умножаем
 		for n := range result[m] {
-			for i := 0; i < cap(result[m]); i++ {
+			for i := 0; i < secondMatrix.m(); i++ {
 				result[m][n] += firstMatrix[m][i] * secondMatrix[i][n]
 			}
 
@@ -110,30 +110,13 @@ func main() {
 
 	fmt.Println("Вторая матрица: ")
 	secondMatrix := Matrix{
-		{1, 3, 0},
-		{1, 1, 3},
-		{4, 0, 0},
+		{1, 3, 0, 4},
+		{1, 1, 3, 4},
+		{4, 0, 0, 4},
 	}
 	secondMatrix.show()
 
 	fmt.Println("Результат умножения матриц: ")
 	matrixMultiplication(firstMatrix, secondMatrix).show()
-
-	fmt.Println("Симметричная матрица второй матрицы: ")
-	secondMatrix.symmetric().show()
-
-	/*firstMatrix.fill(3, 3)
-	firstMatrix.show()
-
-	secondMatrix.fill(3, 3)
-	secondMatrix.show()
-
-	fmt.Println("Результат сложения:")*/
-	//sumOfMatrix(firstMatrix, secondMatrix).show()
-
-	/*var matrix Matrix
-	matrix.fill(3, 3)
-
-	matrix.transposed().show()*/
 
 }
