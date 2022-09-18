@@ -33,8 +33,8 @@ func sumOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // складыва�
 func getMatrix(matrix Matrix) { // получает матрицу
 	fmt.Println("Введите матрицу: ")
 
-	for i := 0; i < cap(matrix); i++ {
-		for n := 0; n < cap(matrix[i]); n++ {
+	for i := range matrix {
+		for n := range matrix[i] {
 			fmt.Scan(&matrix[i][n])
 		}
 	}
@@ -71,11 +71,20 @@ func (matrix Matrix) show() { // выводит матрицу в консоль
 }
 
 func (matrix Matrix) transposed() Matrix { // возвращает транспонированную матрицу
-	return matrix // работаем с копией, а не оригиналом, поэтому всё хорошо
+	var result Matrix
+	result.prepareToFill(matrix.m(), matrix.n())
+
+	for m := range matrix {
+		for n := range matrix {
+			result[m][n] = matrix[n][m]
+		}
+	}
+
+	return result // возвращаем результат
 }
 
 func main() {
-	var firstMatrix Matrix
+	/*var firstMatrix Matrix
 	var secondMatrix Matrix
 
 	firstMatrix.fill(3, 3)
@@ -83,6 +92,12 @@ func main() {
 
 	secondMatrix.fill(3, 3)
 	secondMatrix.show()
+
 	fmt.Println("Результат сложения:")
-	sumOfMatrix(firstMatrix, secondMatrix).show()
+	sumOfMatrix(firstMatrix, secondMatrix).show()*/
+
+	var matrix Matrix
+	matrix.fill(3, 3)
+
+	matrix.transposed().show()
 }
