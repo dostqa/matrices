@@ -6,6 +6,8 @@
 	2.1) Разобраться с управляющими последовательностями
 	2.2) Подписывать при выводе каждую строку и столбец.
 	2.3) Возможно показывать размерность матрицы
+3) Переработать код в пользу удобочитаемости с использованием
+прижившихся в линейной алгебре обозначений
 */
 
 package main
@@ -13,17 +15,28 @@ package main
 import "fmt"
 
 func matrixMultiplication(firstMatrix, secondMatrix Matrix) Matrix { // умножает матрицу на матрицу; возвращает результат
-	var result Matrix // результат умножения
+	var result Matrix                                      // переменная в которую сохраним результат умножения
+	result.prepareToFill(firstMatrix.m(), firstMatrix.n()) // создаем свободное место для элементов матрицы
+
+	for m := range result { // непосредственно умножаем
+		for n := range result[m] {
+			for i := 0; i < cap(result[m]); i++ {
+				result[m][n] += firstMatrix[m][i] * secondMatrix[i][n]
+			}
+
+		}
+	}
+
 	return result
 }
 
 func sumOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // складывает матрицы; возвращает результат
-	var result Matrix                                      // результат сложения
+	var result Matrix                                      // переменная в которую сохраним результат сложения
 	result.prepareToFill(firstMatrix.m(), firstMatrix.n()) // создаем свободное место для элементов матрицы
 
-	for i := range result {
-		for n := range result {
-			result[i][n] = firstMatrix[i][n] + secondMatrix[i][n]
+	for m := range result { // непосредственно складываем
+		for n := range result[m] {
+			result[m][n] = firstMatrix[m][n] + secondMatrix[m][n]
 		}
 	}
 
@@ -33,9 +46,9 @@ func sumOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // складыва�
 func getMatrix(matrix Matrix) { // получает матрицу
 	fmt.Println("Введите матрицу: ")
 
-	for i := range matrix {
-		for n := range matrix[i] {
-			fmt.Scan(&matrix[i][n])
+	for m := range matrix { // непосредственно построчно получаем матрицу
+		for n := range matrix[m] {
+			fmt.Scan(&matrix[m][n])
 		}
 	}
 
@@ -65,16 +78,16 @@ func (matrix *Matrix) fill(m int, n int) { // наполняет матрицу 
 }
 
 func (matrix Matrix) show() { // выводит матрицу в консоль в удобочитаемом виде
-	for i := range matrix {
-		fmt.Println("строка", i, matrix[i])
+	for m := range matrix {
+		fmt.Println("строка", m+1, matrix[m])
 	}
 }
 
 func (matrix Matrix) transposed() Matrix { // возвращает транспонированную матрицу
-	var result Matrix
-	result.prepareToFill(matrix.m(), matrix.n())
+	var result Matrix                            // переменная в которую сохраним результат транспонирования
+	result.prepareToFill(matrix.m(), matrix.n()) // создаем свободное место для элементов матрицы
 
-	for m := range matrix {
+	for m := range matrix { // непосредственно транспонируем
 		for n := range matrix {
 			result[m][n] = matrix[n][m]
 		}
@@ -83,21 +96,44 @@ func (matrix Matrix) transposed() Matrix { // возвращает трансп�
 	return result // возвращаем результат
 }
 
-func main() {
-	/*var firstMatrix Matrix
-	var secondMatrix Matrix
+func (matrix Matrix) symmetric() Matrix { // возвращает симметричную матрицу
+	return matrixMultiplication(matrix, matrix.transposed())
+}
 
-	firstMatrix.fill(3, 3)
+func main() {
+	fmt.Println("Первая матрица: ")
+	firstMatrix := Matrix{
+		{3, 2, 1},
+		{4, 0, 2},
+	}
+	firstMatrix.show()
+
+	fmt.Println("Вторая матрица: ")
+	secondMatrix := Matrix{
+		{1, 3, 0},
+		{1, 1, 3},
+		{4, 0, 0},
+	}
+	secondMatrix.show()
+
+	fmt.Println("Результат умножения матриц: ")
+	matrixMultiplication(firstMatrix, secondMatrix).show()
+
+	fmt.Println("Симметричная матрица второй матрицы: ")
+	secondMatrix.symmetric().show()
+
+	/*firstMatrix.fill(3, 3)
 	firstMatrix.show()
 
 	secondMatrix.fill(3, 3)
 	secondMatrix.show()
 
-	fmt.Println("Результат сложения:")
-	sumOfMatrix(firstMatrix, secondMatrix).show()*/
+	fmt.Println("Результат сложения:")*/
+	//sumOfMatrix(firstMatrix, secondMatrix).show()
 
-	var matrix Matrix
+	/*var matrix Matrix
 	matrix.fill(3, 3)
 
-	matrix.transposed().show()
+	matrix.transposed().show()*/
+
 }
