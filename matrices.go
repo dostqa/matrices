@@ -12,7 +12,25 @@ package main
 
 import "fmt"
 
-func getMatrix(matrix Matrix) { //получает матрицу
+func matrixMultiplication(firstMatrix, secondMatrix Matrix) Matrix { // умножает матрицу на матрицу; возвращает результат
+	var result Matrix // результат умножения
+	return result
+}
+
+func sumOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // складывает матрицы; возвращает результат
+	var result Matrix                                      // результат сложения
+	result.prepareToFill(firstMatrix.m(), firstMatrix.n()) // создаем свободное место для элементов матрицы
+
+	for i := range result {
+		for n := range result {
+			result[i][n] = firstMatrix[i][n] + secondMatrix[i][n]
+		}
+	}
+
+	return result
+}
+
+func getMatrix(matrix Matrix) { // получает матрицу
 	fmt.Println("Введите матрицу: ")
 
 	for i := 0; i < cap(matrix); i++ {
@@ -34,13 +52,16 @@ func (matrix Matrix) n() int { // возвращает количество ст
 	return cap(matrix[0]) // получаем и сразу же возвращаем
 }
 
-func (matrix *Matrix) fill(m int, n int) { // наполняет матрицу значениями, или заменяет значения уже существующей матрицы
+func (matrix *Matrix) prepareToFill(m int, n int) { // создаем свободное место для элементов матрицы
 	*(matrix) = make([][]int, m) // создаем матрицу с заданным количеством строк и помещаем её в ячейку памяти, где хранится наша матрица
 	for i := range *(matrix) {   // создаем в каждой строке нужное количество мест для элементов
 		(*matrix)[i] = make([]int, n)
 	}
+}
 
-	getMatrix(*(matrix)) // получаем данные от пользователя
+func (matrix *Matrix) fill(m int, n int) { // наполняет матрицу значениями, или заменяет значения уже существующей матрицы
+	matrix.prepareToFill(m, n) // создаем свободное место для элементов матрицы
+	getMatrix(*(matrix))       // получаем данные от пользователя
 }
 
 func (matrix Matrix) show() { // выводит матрицу в консоль в удобочитаемом виде
@@ -54,7 +75,14 @@ func (matrix Matrix) transposed() Matrix { // возвращает трансп�
 }
 
 func main() {
-	var matrix Matrix
-	matrix.fill(3, 3)
-	matrix.show()
+	var firstMatrix Matrix
+	var secondMatrix Matrix
+
+	firstMatrix.fill(3, 3)
+	firstMatrix.show()
+
+	secondMatrix.fill(3, 3)
+	secondMatrix.show()
+	fmt.Println("Результат сложения:")
+	sumOfMatrix(firstMatrix, secondMatrix).show()
 }
