@@ -8,10 +8,10 @@ package main
 
 import "fmt"
 
-func matrixMultiplication(firstMatrix, secondMatrix Matrix) (matrix Matrix, err int8) { // умножает матрицу на матрицу; возвращает результат
+func matrixMultiplication(firstMatrix, secondMatrix Matrix) (matrix Matrix, err bool) { // умножает матрицу на матрицу; возвращает результат
 	switch { // проверяем возможно ли умножение
 	case firstMatrix.n() != secondMatrix.m():
-		return Matrix{{}}, 1 // умножение невозможно: возвращаем пустую матрицу и наличие ошибки
+		return Matrix{{}}, true // умножение невозможно: возвращаем пустую матрицу и наличие ошибки
 	}
 
 	var result Matrix                                       // переменная в которую сохраним результат умножения
@@ -26,13 +26,13 @@ func matrixMultiplication(firstMatrix, secondMatrix Matrix) (matrix Matrix, err 
 		}
 	}
 
-	return result, 0
+	return result, false
 }
 
-func sumOfMatrix(firstMatrix, secondMatrix Matrix) (matrix Matrix, err int8) { // складывает матрицы; возвращает результат
+func sumOfMatrix(firstMatrix, secondMatrix Matrix) (matrix Matrix, err bool) { // складывает матрицы; возвращает результат
 	switch { // проверяем возможно ли сложение
 	case firstMatrix.m() != secondMatrix.m() || firstMatrix.n() != secondMatrix.n():
-		return Matrix{{}}, 1 // сложение невозможно: возвращаем пустую матрицу и наличие ошибки
+		return Matrix{{}}, true // сложение невозможно: возвращаем пустую матрицу и наличие ошибки
 	}
 
 	var result Matrix                                      // переменная в которую сохраним результат сложения
@@ -44,13 +44,13 @@ func sumOfMatrix(firstMatrix, secondMatrix Matrix) (matrix Matrix, err int8) { /
 		}
 	}
 
-	return result, 0
+	return result, false
 }
 
-func diffOfMatrix(firstMatrix, secondMatrix Matrix) (matrix Matrix, err int8) { // находит разность матриц; возвращает результат
+func diffOfMatrix(firstMatrix, secondMatrix Matrix) (matrix Matrix, err bool) { // находит разность матриц; возвращает результат
 	switch { // проверяем возможно ли вычитание
 	case firstMatrix.m() != secondMatrix.m() || firstMatrix.n() != secondMatrix.n():
-		return Matrix{{}}, 1 // вычитание невозможно: возвращаем пустую матрицу и наличие ошибки
+		return Matrix{{}}, true // вычитание невозможно: возвращаем пустую матрицу и наличие ошибки
 	}
 
 	var result Matrix                                      // переменная в которую сохраним результат вычитания
@@ -62,7 +62,7 @@ func diffOfMatrix(firstMatrix, secondMatrix Matrix) (matrix Matrix, err int8) { 
 		}
 	}
 
-	return result, 0
+	return result, false
 }
 
 type Matrix [][]int
@@ -158,10 +158,10 @@ func main() {
 	result, i := matrixMultiplication(firstMatrix, secondMatrix)
 
 	switch {
-	case i == 1:
+	case i:
 		fmt.Println("Матрицы несогласованы.")
 
-	case i == 0:
+	default:
 		fmt.Println("Результат умножения матриц: ")
 		result.show()
 	}
@@ -169,10 +169,10 @@ func main() {
 	result, i = sumOfMatrix(firstMatrix, secondMatrix)
 
 	switch {
-	case i == 1:
+	case i:
 		fmt.Println("Матрицы неодинаковой размерности. Сложение невозможно")
 
-	case i == 0:
+	default:
 		fmt.Println("Результат сложения матриц: ")
 		result.show()
 	}
@@ -180,10 +180,10 @@ func main() {
 	result, i = diffOfMatrix(firstMatrix, secondMatrix)
 
 	switch {
-	case i == 1:
+	case i:
 		fmt.Println("Матрицы неодинаковой размерности. Вычитание невозможно")
 
-	case i == 0:
+	default:
 		fmt.Println("Результат вычитания матриц: ")
 		result.show()
 	}
@@ -211,10 +211,10 @@ func main() {
 	result, i = matrixMultiplication(firstMatrix, secondMatrix)
 
 	switch {
-	case i == 1:
+	case i:
 		fmt.Println("Матрицы несогласованы.")
 
-	case i == 0:
+	default:
 		fmt.Println("Результат умножения матриц: ")
 		result.show()
 	}
@@ -222,10 +222,10 @@ func main() {
 	result, i = sumOfMatrix(firstMatrix, secondMatrix)
 
 	switch {
-	case i == 1:
-		fmt.Println("Матрицы неодинаковой размерности.")
+	case i:
+		fmt.Println("Матрицы неодинаковой размерности. Сложение невозможно")
 
-	case i == 0:
+	default:
 		fmt.Println("Результат сложения матриц: ")
 		result.show()
 	}
@@ -233,10 +233,10 @@ func main() {
 	result, i = diffOfMatrix(firstMatrix, secondMatrix)
 
 	switch {
-	case i == 1:
+	case i:
 		fmt.Println("Матрицы неодинаковой размерности. Вычитание невозможно")
 
-	case i == 0:
+	default:
 		fmt.Println("Результат вычитания матриц: ")
 		result.show()
 	}
