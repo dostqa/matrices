@@ -43,16 +43,17 @@ func sumOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // складыва�
 	return result
 }
 
-func getMatrix(matrix Matrix) { // получает матрицу
-	fmt.Println("Введите матрицу: ")
+func diffOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // находит разность матриц; возвращает результат
+	var result Matrix                                      // переменная в которую сохраним результат вычитания
+	result.prepareToFill(firstMatrix.m(), firstMatrix.n()) // создаем свободное место для элементов матрицы
 
-	for m := range matrix { // непосредственно построчно получаем матрицу
-		for n := range matrix[m] {
-			fmt.Scan(&matrix[m][n])
+	for m := range result { // непосредственно вычитаем
+		for n := range result[m] {
+			result[m][n] = firstMatrix[m][n] - secondMatrix[m][n]
 		}
 	}
 
-	return
+	return result
 }
 
 type Matrix [][]int
@@ -72,15 +73,40 @@ func (matrix *Matrix) prepareToFill(m int, n int) { // создаем свобо
 	}
 }
 
+func (matrix *Matrix) get() { // получает матрицу
+	got := *matrix
+	fmt.Println("Введите матрицу: ")
+
+	for m := range got { // непосредственно построчно получаем матрицу
+		for n := range got[m] {
+			fmt.Scan(&got[m][n])
+		}
+	}
+
+	*matrix = got
+
+	return
+}
+
 func (matrix *Matrix) fill(m int, n int) { // наполняет матрицу значениями, или заменяет значения уже существующей матрицы
 	matrix.prepareToFill(m, n) // создаем свободное место для элементов матрицы
-	getMatrix(*(matrix))       // получаем данные от пользователя
+	matrix.get()               // получаем данные от пользователя
 }
 
 func (matrix Matrix) show() { // выводит матрицу в консоль в удобочитаемом виде
 	for m := range matrix {
 		fmt.Println("строка", m+1, matrix[m])
 	}
+}
+
+func (matrix Matrix) multiplyByNum(num int) Matrix { // умножает матрицу на число; возвращает результат
+	for m := range matrix { // работаем с копией, так что всё хорошо
+		for n := range matrix[m] {
+			matrix[m][n] *= num
+		}
+	}
+
+	return matrix // возвращаем копию
 }
 
 func (matrix Matrix) transposed() Matrix { // возвращает транспонированную матрицу
@@ -106,7 +132,7 @@ func main() {
 		{1, 1, 3, 4},
 		{4, 0, 0, 4},
 	}
-	matrix.transposed().show()
+	matrix.multiplyByNum(3).show()
 
 	fmt.Println("Первая матрица: ")
 	firstMatrix := Matrix{
@@ -128,5 +154,16 @@ func main() {
 
 	fmt.Println("Транспонированная вторая матрица: ")
 	secondMatrix.transposed().show()*/
+
+	var firstMatrix Matrix
+	var secondMatrix Matrix
+
+	firstMatrix.fill(3, 3)
+	firstMatrix.show()
+
+	secondMatrix.fill(3, 3)
+	secondMatrix.show()
+	fmt.Println("Результат сложения:")
+	sumOfMatrix(firstMatrix, secondMatrix).show()
 
 }
