@@ -155,10 +155,10 @@ func main() {
 	}
 	secondMatrix.show()
 
-	result, i := matrixMultiplication(firstMatrix, secondMatrix)
+	result, err := matrixMultiplication(firstMatrix, secondMatrix)
 
 	switch {
-	case i:
+	case err:
 		fmt.Println("Матрицы несогласованы.")
 
 	default:
@@ -166,10 +166,10 @@ func main() {
 		result.show()
 	}
 
-	result, i = sumOfMatrix(firstMatrix, secondMatrix)
+	result, err = sumOfMatrix(firstMatrix, secondMatrix)
 
 	switch {
-	case i:
+	case err:
 		fmt.Println("Матрицы неодинаковой размерности. Сложение невозможно")
 
 	default:
@@ -177,10 +177,10 @@ func main() {
 		result.show()
 	}
 
-	result, i = diffOfMatrix(firstMatrix, secondMatrix)
+	result, err = diffOfMatrix(firstMatrix, secondMatrix)
 
 	switch {
-	case i:
+	case err:
 		fmt.Println("Матрицы неодинаковой размерности. Вычитание невозможно")
 
 	default:
@@ -208,10 +208,10 @@ func main() {
 	}
 	secondMatrix.show()
 
-	result, i = matrixMultiplication(firstMatrix, secondMatrix)
+	result, err = matrixMultiplication(firstMatrix, secondMatrix)
 
 	switch {
-	case i:
+	case err:
 		fmt.Println("Матрицы несогласованы.")
 
 	default:
@@ -219,10 +219,10 @@ func main() {
 		result.show()
 	}
 
-	result, i = sumOfMatrix(firstMatrix, secondMatrix)
+	result, err = sumOfMatrix(firstMatrix, secondMatrix)
 
 	switch {
-	case i:
+	case err:
 		fmt.Println("Матрицы неодинаковой размерности. Сложение невозможно")
 
 	default:
@@ -230,10 +230,10 @@ func main() {
 		result.show()
 	}
 
-	result, i = diffOfMatrix(firstMatrix, secondMatrix)
+	result, err = diffOfMatrix(firstMatrix, secondMatrix)
 
 	switch {
-	case i:
+	case err:
 		fmt.Println("Матрицы неодинаковой размерности. Вычитание невозможно")
 
 	default:
