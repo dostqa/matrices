@@ -1,20 +1,19 @@
 /*
 Задачи:
-1) Доработать функцию matrix.fill()
-	1.1) Реализовать input от пользователя
-2) Доработать функцию matrix.show()
-	2.1) Разобраться с управляющими последовательностями
-	2.2) Подписывать при выводе каждую строку и столбец.
-	2.3) Возможно показывать размерность матрицы
-3) Переработать код в пользу удобочитаемости с использованием
-прижившихся в линейной алгебре обозначений
+1) реализовать пользовательский интерфейс
+2) прописать условия там, где это нужно
 */
 
 package main
 
 import "fmt"
 
-func matrixMultiplication(firstMatrix, secondMatrix Matrix) Matrix { // умножает матрицу на матрицу; возвращает результат
+func matrixMultiplication(firstMatrix, secondMatrix Matrix) (matrix Matrix, err int8) { // умножает матрицу на матрицу; возвращает результат
+	switch { // проверяем возможно ли умножение
+	case firstMatrix.n() != secondMatrix.m():
+		return Matrix{{}}, 1 // умножение невозможно: возвращаем пустую матрицу и наличие ошибки
+	}
+
 	var result Matrix                                       // переменная в которую сохраним результат умножения
 	result.prepareToFill(firstMatrix.m(), secondMatrix.n()) // создаем свободное место для элементов матрицы
 
@@ -27,10 +26,15 @@ func matrixMultiplication(firstMatrix, secondMatrix Matrix) Matrix { // умно
 		}
 	}
 
-	return result
+	return result, 0
 }
 
-func sumOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // складывает матрицы; возвращает результат
+func sumOfMatrix(firstMatrix, secondMatrix Matrix) (matrix Matrix, err int8) { // складывает матрицы; возвращает результат
+	switch { // проверяем возможно ли сложение
+	case firstMatrix.m() != secondMatrix.m() || firstMatrix.n() != secondMatrix.n():
+		return Matrix{{}}, 1 // сложение невозможно: возвращаем пустую матрицу и наличие ошибки
+	}
+
 	var result Matrix                                      // переменная в которую сохраним результат сложения
 	result.prepareToFill(firstMatrix.m(), firstMatrix.n()) // создаем свободное место для элементов матрицы
 
@@ -40,10 +44,15 @@ func sumOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // складыва�
 		}
 	}
 
-	return result
+	return result, 0
 }
 
-func diffOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // находит разность матриц; возвращает результат
+func diffOfMatrix(firstMatrix, secondMatrix Matrix) (matrix Matrix, err int8) { // находит разность матриц; возвращает результат
+	switch { // проверяем возможно ли вычитание
+	case firstMatrix.m() != secondMatrix.m() || firstMatrix.n() != secondMatrix.n():
+		return Matrix{{}}, 1 // вычитание невозможно: возвращаем пустую матрицу и наличие ошибки
+	}
+
 	var result Matrix                                      // переменная в которую сохраним результат вычитания
 	result.prepareToFill(firstMatrix.m(), firstMatrix.n()) // создаем свободное место для элементов матрицы
 
@@ -53,7 +62,7 @@ func diffOfMatrix(firstMatrix, secondMatrix Matrix) Matrix { // находит �
 		}
 	}
 
-	return result
+	return result, 0
 }
 
 type Matrix [][]int
@@ -123,10 +132,115 @@ func (matrix Matrix) transposed() Matrix { // возвращает трансп�
 }
 
 func (matrix Matrix) symmetric() Matrix { // возвращает симметричную матрицу
-	return matrixMultiplication(matrix, matrix.transposed())
+	result, _ := matrixMultiplication(matrix, matrix.transposed())
+	return result
 }
 
 func main() {
+	fmt.Println("1.")
+	fmt.Println("")
+
+	fmt.Println("Первая матрица: ")
+	firstMatrix := Matrix{
+		{3, 2, 1, 3},
+		{4, 0, 2, 3},
+	}
+	firstMatrix.show()
+
+	fmt.Println("Вторая матрица: ")
+	secondMatrix := Matrix{
+		{1, 3, 0, 4},
+		{1, 1, 3, 4},
+		{4, 0, 0, 4},
+	}
+	secondMatrix.show()
+
+	result, i := matrixMultiplication(firstMatrix, secondMatrix)
+
+	switch {
+	case i == 1:
+		fmt.Println("Матрицы несогласованы.")
+
+	case i == 0:
+		fmt.Println("Результат умножения матриц: ")
+		result.show()
+	}
+
+	result, i = sumOfMatrix(firstMatrix, secondMatrix)
+
+	switch {
+	case i == 1:
+		fmt.Println("Матрицы неодинаковой размерности. Сложение невозможно")
+
+	case i == 0:
+		fmt.Println("Результат сложения матриц: ")
+		result.show()
+	}
+
+	result, i = diffOfMatrix(firstMatrix, secondMatrix)
+
+	switch {
+	case i == 1:
+		fmt.Println("Матрицы неодинаковой размерности. Вычитание невозможно")
+
+	case i == 0:
+		fmt.Println("Результат вычитания матриц: ")
+		result.show()
+	}
+
+	fmt.Println("")
+	fmt.Println("2.")
+	fmt.Println("")
+
+	fmt.Println("Первая матрица: ")
+	firstMatrix = Matrix{
+		{3, 2, 1},
+		{4, 0, 2},
+		{4, 0, 0},
+	}
+	firstMatrix.show()
+
+	fmt.Println("Вторая матрица: ")
+	secondMatrix = Matrix{
+		{1, 3, 0},
+		{1, 1, 3},
+		{4, 0, 0},
+	}
+	secondMatrix.show()
+
+	result, i = matrixMultiplication(firstMatrix, secondMatrix)
+
+	switch {
+	case i == 1:
+		fmt.Println("Матрицы несогласованы.")
+
+	case i == 0:
+		fmt.Println("Результат умножения матриц: ")
+		result.show()
+	}
+
+	result, i = sumOfMatrix(firstMatrix, secondMatrix)
+
+	switch {
+	case i == 1:
+		fmt.Println("Матрицы неодинаковой размерности.")
+
+	case i == 0:
+		fmt.Println("Результат сложения матриц: ")
+		result.show()
+	}
+
+	result, i = diffOfMatrix(firstMatrix, secondMatrix)
+
+	switch {
+	case i == 1:
+		fmt.Println("Матрицы неодинаковой размерности. Вычитание невозможно")
+
+	case i == 0:
+		fmt.Println("Результат вычитания матриц: ")
+		result.show()
+	}
+
 	/*matrix := Matrix{
 		{1, 3, 0, 4},
 		{1, 1, 3, 4},
@@ -155,7 +269,7 @@ func main() {
 	fmt.Println("Транспонированная вторая матрица: ")
 	secondMatrix.transposed().show()*/
 
-	var firstMatrix Matrix
+	/*var firstMatrix Matrix
 	var secondMatrix Matrix
 
 	firstMatrix.fill(3, 3)
@@ -164,6 +278,5 @@ func main() {
 	secondMatrix.fill(3, 3)
 	secondMatrix.show()
 	fmt.Println("Результат сложения:")
-	sumOfMatrix(firstMatrix, secondMatrix).show()
-
+	sumOfMatrix(firstMatrix, secondMatrix).show()*/
 }
