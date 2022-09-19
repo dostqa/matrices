@@ -85,11 +85,11 @@ func (matrix Matrix) show() { // выводит матрицу в консоль
 
 func (matrix Matrix) transposed() Matrix { // возвращает транспонированную матрицу
 	var result Matrix                            // переменная в которую сохраним результат транспонирования
-	result.prepareToFill(matrix.m(), matrix.n()) // создаем свободное место для элементов матрицы
+	result.prepareToFill(matrix.n(), matrix.m()) // создаем свободное место для элементов матрицы
 
 	for m := range matrix { // непосредственно транспонируем
-		for n := range matrix {
-			result[m][n] = matrix[n][m]
+		for n := range matrix[m] {
+			result[n][m] = matrix[m][n]
 		}
 	}
 
@@ -101,6 +101,13 @@ func (matrix Matrix) symmetric() Matrix { // возвращает симметр
 }
 
 func main() {
+	/*matrix := Matrix{
+		{1, 3, 0, 4},
+		{1, 1, 3, 4},
+		{4, 0, 0, 4},
+	}
+	matrix.transposed().show()
+
 	fmt.Println("Первая матрица: ")
 	firstMatrix := Matrix{
 		{3, 2, 1},
@@ -118,5 +125,8 @@ func main() {
 
 	fmt.Println("Результат умножения матриц: ")
 	matrixMultiplication(firstMatrix, secondMatrix).show()
+
+	fmt.Println("Транспонированная вторая матрица: ")
+	secondMatrix.transposed().show()*/
 
 }
