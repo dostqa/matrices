@@ -8,6 +8,10 @@ package main
 
 import "fmt"
 
+func det(matrix Matrix) int { // возвращает детерминант матрицы
+	return 0
+}
+
 func matrixMultiplication(firstMatrix, secondMatrix Matrix) (matrix Matrix, err bool) { // умножает матрицу на матрицу; возвращает результат
 	switch { // проверяем возможно ли умножение
 	case firstMatrix.n() != secondMatrix.m():
@@ -136,110 +140,87 @@ func (matrix Matrix) symmetric() Matrix { // возвращает симметр
 	return result
 }
 
+func (matrix Matrix) findSubmatrix(i int, j int) Matrix { // возвращает подматрицу матрицы
+	var submatrix Matrix
+	submatrix.prepareToFill(matrix.m()-1, matrix.n()-1)
+
+	for m := range matrix {
+		switch {
+		case m == i-1:
+			copy(matrix[i-1:], matrix[i:])  // выполняем сдвиг влево на один индекс
+			matrix[cap(matrix)-1] = nil     // удаляем последний элемент (записываем нулевое значение)
+			matrix = matrix[:cap(matrix)-1] // усекаем срез
+			break
+
+		default:
+			continue
+		}
+	}
+
+	for m := range matrix {
+		fmt.Println("Was here 2")
+		for n := range matrix[m] {
+			switch {
+			case n == j-1:
+				copy(matrix[m][j-1:], matrix[m][j:])     // выполняем сдвиг влево на один индекс
+				matrix[m][cap(matrix[m])-1] = 0          // удаляем последний элемент (записываем нулевое значение)
+				matrix[m] = matrix[m][:cap(matrix[m])-1] // усекаем срез
+
+			default:
+				continue
+			}
+		}
+	}
+
+	submatrix = matrix
+
+	return submatrix
+}
+
 func main() {
-	fmt.Println("1.")
-	fmt.Println("")
-
-	fmt.Println("Первая матрица: ")
-	firstMatrix := Matrix{
-		{3, 2, 1, 3},
-		{4, 0, 2, 3},
-	}
-	firstMatrix.show()
-
-	fmt.Println("Вторая матрица: ")
-	secondMatrix := Matrix{
-		{1, 3, 0, 4},
-		{1, 1, 3, 4},
-		{4, 0, 0, 4},
-	}
-	secondMatrix.show()
-
-	result, err := matrixMultiplication(firstMatrix, secondMatrix)
-
-	switch {
-	case err:
-		fmt.Println("Матрицы несогласованы.")
-
-	default:
-		fmt.Println("Результат умножения матриц: ")
-		result.show()
+	var A Matrix = Matrix{
+		{4, 5, 6},
+		{-1, 0, 3},
+		{-1, 2, -1},
 	}
 
-	result, err = sumOfMatrix(firstMatrix, secondMatrix)
+	A.findSubmatrix(2, 2).show()
 
-	switch {
-	case err:
-		fmt.Println("Матрицы неодинаковой размерности. Сложение невозможно")
-
-	default:
-		fmt.Println("Результат сложения матриц: ")
-		result.show()
+	/*var B Matrix = Matrix{
+		{0, -1, 2},
+		{1, 0, -2},
+		{3, 1, 2},
 	}
 
-	result, err = diffOfMatrix(firstMatrix, secondMatrix)
+	fmt.Println("В первом действии получится: ")
+	first, _ := matrixMultiplication(A, A)
+	first.show()
+	fmt.Println(" ")
 
-	switch {
-	case err:
-		fmt.Println("Матрицы неодинаковой размерности. Вычитание невозможно")
+	fmt.Println("Во втором действии получится: ")
+	second, _ := sumOfMatrix(A, B)
+	second.show()
+	fmt.Println(" ")
 
-	default:
-		fmt.Println("Результат вычитания матриц: ")
-		result.show()
-	}
+	fmt.Println("В третьем действии получится: ")
+	third := B.multiplyByNum(3)
+	third.show()
+	fmt.Println(" ")
 
-	fmt.Println("")
-	fmt.Println("2.")
-	fmt.Println("")
+	fmt.Println("В четвертом действии получится: ")
+	fourth, _ := diffOfMatrix(A, third)
+	fourth.show()
+	fmt.Println(" ")
 
-	fmt.Println("Первая матрица: ")
-	firstMatrix = Matrix{
-		{3, 2, 1},
-		{4, 0, 2},
-		{4, 0, 0},
-	}
-	firstMatrix.show()
+	fmt.Println("В пятом действии получится: ")
+	fifth, _ := matrixMultiplication(second, fourth)
+	fifth.show()
+	fmt.Println(" ")
 
-	fmt.Println("Вторая матрица: ")
-	secondMatrix = Matrix{
-		{1, 3, 0},
-		{1, 1, 3},
-		{4, 0, 0},
-	}
-	secondMatrix.show()
-
-	result, err = matrixMultiplication(firstMatrix, secondMatrix)
-
-	switch {
-	case err:
-		fmt.Println("Матрицы несогласованы.")
-
-	default:
-		fmt.Println("Результат умножения матриц: ")
-		result.show()
-	}
-
-	result, err = sumOfMatrix(firstMatrix, secondMatrix)
-
-	switch {
-	case err:
-		fmt.Println("Матрицы неодинаковой размерности. Сложение невозможно")
-
-	default:
-		fmt.Println("Результат сложения матриц: ")
-		result.show()
-	}
-
-	result, err = diffOfMatrix(firstMatrix, secondMatrix)
-
-	switch {
-	case err:
-		fmt.Println("Матрицы неодинаковой размерности. Вычитание невозможно")
-
-	default:
-		fmt.Println("Результат вычитания матриц: ")
-		result.show()
-	}
+	fmt.Println("В шестом действии получится: ")
+	sixth, _ := diffOfMatrix(first, fifth)
+	sixth.show()
+	fmt.Println(" ")
 
 	/*matrix := Matrix{
 		{1, 3, 0, 4},
