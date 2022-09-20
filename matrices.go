@@ -140,6 +140,28 @@ func (matrix Matrix) symmetric() Matrix { // возвращает симметр
 	return result
 }
 
+func (matrix *Matrix) delRow(m int) { // метод удаляет строку
+	m -= 1
+	result := *matrix
+
+	copy(result[m:], result[m+1:])  // выполняем сдвиг влево на один индекс
+	result[cap(result)-1] = nil     // удаляем последний элемент (записываем нулевое значение)
+	result = result[:cap(result)-1] // усекаем срез
+
+	*matrix = result
+}
+
+func (matrix *Matrix) delColumn(m int, n int) { // метод удаляет столбец
+	result := *matrix
+	n -= 1
+
+	copy(result[m][n:], result[m][n+1:])     // выполняем сдвиг влево на один индекс
+	result[m][cap(result[m])-1] = 0          // удаляем последний элемент (записываем нулевое значение)
+	result[m] = result[m][:cap(result[m])-1] // усекаем срез
+
+	*matrix = result
+}
+
 func (matrix Matrix) findSubmatrix(i int, j int) Matrix { // возвращает подматрицу матрицы
 	var submatrix Matrix
 	submatrix.prepareToFill(matrix.m()-1, matrix.n()-1)
@@ -147,9 +169,7 @@ func (matrix Matrix) findSubmatrix(i int, j int) Matrix { // возвращае�
 	for m := range matrix {
 		switch {
 		case m == i-1:
-			copy(matrix[i-1:], matrix[i:])  // выполняем сдвиг влево на один индекс
-			matrix[cap(matrix)-1] = nil     // удаляем последний элемент (записываем нулевое значение)
-			matrix = matrix[:cap(matrix)-1] // усекаем срез
+			matrix.delRow(i) // удаляем строку
 			break
 
 		default:
@@ -158,13 +178,10 @@ func (matrix Matrix) findSubmatrix(i int, j int) Matrix { // возвращае�
 	}
 
 	for m := range matrix {
-		fmt.Println("Was here 2")
 		for n := range matrix[m] {
 			switch {
 			case n == j-1:
-				copy(matrix[m][j-1:], matrix[m][j:])     // выполняем сдвиг влево на один индекс
-				matrix[m][cap(matrix[m])-1] = 0          // удаляем последний элемент (записываем нулевое значение)
-				matrix[m] = matrix[m][:cap(matrix[m])-1] // усекаем срез
+				matrix.delColumn(m, j) // удаляем столбец
 
 			default:
 				continue
