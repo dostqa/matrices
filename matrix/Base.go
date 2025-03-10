@@ -2,23 +2,23 @@ package matrix
 
 import "fmt"
 
-// Определение типа Matrix
-type Matrix [][]int
+// Определение типа MatrixBase
+type MatrixBase [][]int
 
 /*=============== Взаимодействия с столбцами и строками ======================*/
 
 // возвращает количество строк в матрице
-func (matrix Matrix) CountRow() int {
+func (matrix MatrixBase) CountRow() int {
 	return cap(matrix)
 }
 
 // возвращает количество столбцов в матрице
-func (matrix Matrix) CountCol() int {
+func (matrix MatrixBase) CountCol() int {
 	return cap(matrix[0])
 }
 
 // метод удаляет строку
-func (matrix *Matrix) DelRow(matrixRow int) {
+func (matrix *MatrixBase) DelRow(matrixRow int) {
 
 	matrixRow -= 1
 	result := *matrix
@@ -34,7 +34,7 @@ func (matrix *Matrix) DelRow(matrixRow int) {
 }
 
 // метод удаляет столбец
-func (matrix *Matrix) DelColumn(matrixRow int, matrixCol int) {
+func (matrix *MatrixBase) DelColumn(matrixRow int, matrixCol int) {
 	result := *matrix
 	matrixCol -= 1
 
@@ -53,48 +53,39 @@ func (matrix *Matrix) DelColumn(matrixRow int, matrixCol int) {
 
 /*============ Методы инициализации и заполнения матрицы =============*/
 
-// возвращает подматрицу матрицы
-func (matrix Matrix) FindSubMatrix(i int, j int) Matrix {
-	var subMatrix Matrix
-	subMatrix.PrepareToFill(matrix.CountRow()-1, matrix.CountCol()-1)
-
-	for matrixRow := range matrix {
-		switch {
-		case matrixRow == i-1:
-			// удаляем строку
-			matrix.DelRow(i)
-		default:
-			continue
-		}
-	}
-
-	for matrixRow := range matrix {
-		for matrixCol := range matrix[matrixRow] {
-			switch {
-			case matrixCol == j-1:
-				// удаляем столбец
-				matrix.DelColumn(matrixRow, j)
-			default:
-				continue
-			}
-		}
-	}
-
-	subMatrix = matrix
-
-	return subMatrix
-}
-
 // Метод перезаписи матрицы
-func (matrix *Matrix) Fill(countRow int, countCol int) {
+func (matrix *MatrixBase) Fill(countRow int, countCol int) {
 	// создаем свободное место для элементов матрицы
 	matrix.PrepareToFill(countRow, countCol)
 	// получаем данные от пользователя
 	matrix.ConsoleInput()
 }
 
+// метод создаёт матрицу
+func (matrix *MatrixBase) Initialize(input [][]int) {
+	got := *matrix
+	got.PrepareToFill(cap(input), cap(input[0]))
+
+	for i := range input {
+		copy(got[i], input[i])
+	}
+
+	*matrix = got
+}
+
+// метод создаёт матрицу
+func (matrix *MatrixBase) Create(input [][]int) MatrixBase {
+	matrix.PrepareToFill(cap(input), cap(input[0]))
+
+	for i := range input {
+		copy((*matrix)[i], input[i])
+	}
+
+	return *matrix
+}
+
 // метод размечает массив для матрицы
-func (matrix *Matrix) PrepareToFill(countRow int, countCol int) {
+func (matrix *MatrixBase) PrepareToFill(countRow int, countCol int) {
 
 	// создаем матрицу с заданным количеством строк и помещаем её в ячейку памяти, где хранится наша матрица
 	*(matrix) = make([][]int, countRow)
@@ -106,7 +97,7 @@ func (matrix *Matrix) PrepareToFill(countRow int, countCol int) {
 }
 
 // Ввод матрицы через консоль
-func (matrix *Matrix) ConsoleInput() {
+func (matrix *MatrixBase) ConsoleInput() {
 	got := *matrix
 	fmt.Println("Введите матрицу: ")
 
@@ -123,7 +114,7 @@ func (matrix *Matrix) ConsoleInput() {
 }
 
 // выводит матрицу в консоль в удобочитаемом виде
-func (matrix Matrix) ShowInConsole() {
+func (matrix MatrixBase) ShowInConsole() {
 	for matrixRow := range matrix {
 		fmt.Println("Cтрока", matrixRow+1, matrix[matrixRow])
 	}

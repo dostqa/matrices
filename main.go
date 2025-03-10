@@ -1,15 +1,33 @@
 package main
 
-import m "matrices/matrix"
+import (
+	"fmt"
+	m "matrices/matrix"
+)
 
 func main() {
-	var matrix m.Matrix = m.Matrix{
+	// matrix := m.MatrixEnhance.Create([][]int{
+	// 	{4, 5, 6},
+	// 	{-1, 0, 3},
+	// 	{-1, 2, -1},
+	// })
+
+	// matrix := m.MatrixBase.Create(m.MatrixBase{}, [][]int{
+	// 	{4, 5, 6},
+	// 	{-1, 0, 3},
+	// 	{-1, 2, -1},
+	// })
+
+	matrix := new(m.MatrixEnhance).Create([][]int{
 		{4, 5, 6},
 		{-1, 0, 3},
 		{-1, 2, -1},
-	}
+	})
 
-	matrix.FindSubMatrix(2, 2).ShowInConsole()
+	fmt.Println(matrix)
+
+	// matrix.FindSubMatrix(2, 2).ShowInConsole()
+	// matrix.FindSubMatrix(2, 2).ShowInConsole()
 
 	/*var B Matrix = Matrix{
 		{0, -1, 2},
