@@ -5,9 +5,9 @@ type MatrixEnhance struct {
 }
 
 // Конструктор
-func (matrix *MatrixEnhance) Create(input [][]int) MatrixEnhance {
-	(*matrix).MatrixBase = new(MatrixBase).Create(input)
-	return *matrix
+func (matrix *MatrixEnhance) Create(input [][]int) *MatrixEnhance {
+	(*matrix).MatrixBase = *new(MatrixBase).Create(input)
+	return matrix
 }
 
 // умножает матрицу на матрицу
@@ -25,12 +25,12 @@ func (matrix MatrixEnhance) MultiplyOfMatrix(secondMatrix MatrixEnhance) MatrixE
 	result.PrepareToFill(matrix.CountRow(), secondMatrix.CountCol())
 
 	// непосредственно умножаем
-	for matrixRow := range result.data {
-		for matrixCol := range result.data[matrixRow] {
+	for matrixRow := range result.CountRow() {
+		for matrixCol := range result.CountCol() {
 			for i := range secondMatrix.CountRow() {
-				result.data[matrixRow][matrixCol] +=
-					matrix.data[matrixRow][i] *
-						secondMatrix.data[i][matrixCol]
+				*result.Get(matrixRow, matrixCol) +=
+					*matrix.Get(matrixRow, i) *
+						*secondMatrix.Get(i, matrixCol)
 			}
 
 		}
@@ -54,11 +54,11 @@ func (matrix MatrixEnhance) SumOfMatrix(secondMatrix MatrixEnhance) MatrixEnhanc
 	result.PrepareToFill(matrix.CountRow(), matrix.CountCol())
 
 	// непосредственно складываем
-	for matrixRow := range result.data {
-		for matrixCol := range result.data[matrixRow] {
-			result.data[matrixRow][matrixCol] =
-				matrix.data[matrixRow][matrixCol] +
-					secondMatrix.data[matrixRow][matrixCol]
+	for matrixRow := range result.CountRow() {
+		for matrixCol := range result.CountCol() {
+			*result.Get(matrixRow, matrixCol) =
+				*matrix.Get(matrixRow, matrixCol) +
+					*secondMatrix.Get(matrixRow, matrixCol)
 		}
 	}
 
@@ -80,11 +80,11 @@ func (matrix MatrixEnhance) DiffOfMatrix(secondMatrix MatrixEnhance) MatrixEnhan
 	result.PrepareToFill(matrix.CountRow(), matrix.CountCol())
 
 	// непосредственно вычитаем
-	for matrixRow := range result.data {
-		for matrixCol := range result.data[matrixRow] {
-			result.data[matrixRow][matrixCol] =
-				matrix.data[matrixRow][matrixCol] -
-					secondMatrix.data[matrixRow][matrixCol]
+	for matrixRow := range result.CountRow() {
+		for matrixCol := range result.CountCol() {
+			*result.Get(matrixRow, matrixCol) =
+				*matrix.Get(matrixRow, matrixCol) -
+					*secondMatrix.Get(matrixRow, matrixCol)
 		}
 	}
 
@@ -100,10 +100,10 @@ func (matrix MatrixEnhance) MultiplyImmutable(multiplier int) MatrixEnhance {
 	result.PrepareToFill(matrix.CountRow(), matrix.CountCol())
 
 	// умножаем каждый элемент матрицы на число num
-	for matrixRow := range result.data {
-		for matrixCol := range result.data[matrixRow] {
-			result.data[matrixRow][matrixCol] =
-				matrix.data[matrixRow][matrixCol] *
+	for matrixRow := range result.CountRow() {
+		for matrixCol := range result.CountCol() {
+			*result.Get(matrixRow, matrixCol) =
+				*matrix.Get(matrixRow, matrixCol) *
 					multiplier
 		}
 	}
@@ -122,9 +122,10 @@ func (matrix MatrixEnhance) TransposedImmutable() MatrixEnhance {
 	result.PrepareToFill(matrix.CountCol(), matrix.CountRow())
 
 	// непосредственно транспонируем
-	for matrixRow := range result.data {
-		for matrixCol := range result.data[matrixRow] {
-			result.data[matrixCol][matrixRow] = matrix.data[matrixRow][matrixCol]
+	for matrixRow := range result.CountRow() {
+		for matrixCol := range result.CountCol() {
+			*result.Get(matrixCol, matrixRow) =
+				*matrix.Get(matrixRow, matrixCol)
 		}
 	}
 
@@ -134,40 +135,18 @@ func (matrix MatrixEnhance) TransposedImmutable() MatrixEnhance {
 
 // возвращает симметричную матрицу
 func (matrix MatrixEnhance) SymmetricImmutable() MatrixEnhance {
-	result := matrix.MultiplyOfMatrix(matrix.TransposedImmutable())
-	return result
+	return matrix.MultiplyOfMatrix(matrix.TransposedImmutable())
 }
 
 // возвращает подматрицу матрицы
-func (matrix MatrixEnhance) GetSubMatrix(coordRow int, coordCol int) MatrixEnhance {
+func (matrix *MatrixEnhance) GetSubMatrix(coordRow int, coordCol int) MatrixEnhance {
 
-	var result MatrixEnhance
-	// fmt.Println(matrix)
-	result.PrepareToFill(matrix.CountRow()-1, matrix.CountCol()-1)
+	result := *matrix
 
-	for matrixRow := range matrix.data {
-		switch {
-		case matrixRow == coordRow-1:
-			// удаляем строку
-			matrix.DelRow(coordRow)
-		default:
-			continue
-		}
-	}
+	result.DelRow(coordRow)
+	result.DelColumn(coordCol)
 
-	for matrixRow := range matrix.data {
-		for matrixCol := range matrix.data[matrixRow] {
-			switch {
-			case matrixCol == coordCol-1:
-				// удаляем столбец
-				matrix.DelColumn(matrixRow, coordCol)
-			default:
-				continue
-			}
-		}
-	}
-
-	result = matrix
+	*matrix = result
 
 	return result
 }
