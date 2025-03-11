@@ -11,11 +11,13 @@ type MatrixEnhance struct {
 // 	return matrix
 // }
 
-func (matrix MatrixEnhance) Create(input [][]int) MatrixEnhance {
-	
-	matrix.MatrixBase = new(MatrixBase).Create(input)
-	return matrix
+func (matrix *MatrixEnhance) Create(input [][]int) MatrixEnhance {
+	(*matrix).MatrixBase = new(MatrixBase).Create(input)
+	// matrix.MatrixBase =
+	// fmt.Println(&matrix)
+	return *matrix
 }
+
 // умножает матрицу на матрицу
 func (matrix MatrixEnhance) MultiplyOfMatrix(secondMatrix MatrixEnhance) MatrixEnhance {
 
@@ -145,33 +147,35 @@ func (matrix MatrixEnhance) SymmetricImmutable() MatrixEnhance {
 }
 
 // возвращает подматрицу матрицы
-func (matrix MatrixEnhance) FindSubMatrix(coordRow int, coordCol int) MatrixEnhance {
+func (matrix MatrixEnhance) GetSubMatrix(coordRow int, coordCol int) MatrixEnhance {
 
 	var result MatrixEnhance
-
+	// fmt.Println(matrix)
 	result.PrepareToFill(matrix.CountRow()-1, matrix.CountCol()-1)
 
-	for matrixRow := range result.MatrixBase {
+	for matrixRow := range matrix.MatrixBase {
 		switch {
 		case matrixRow == coordRow-1:
 			// удаляем строку
-			result.DelRow(coordRow)
+			matrix.DelRow(coordRow)
 		default:
 			continue
 		}
 	}
 
-	for matrixRow := range result.MatrixBase {
-		for matrixCol := range result.MatrixBase[matrixRow] {
+	for matrixRow := range matrix.MatrixBase {
+		for matrixCol := range matrix.MatrixBase[matrixRow] {
 			switch {
 			case matrixCol == coordCol-1:
 				// удаляем столбец
-				result.DelColumn(matrixRow, coordCol)
+				matrix.DelColumn(matrixRow, coordCol)
 			default:
 				continue
 			}
 		}
 	}
+
+	result = matrix
 
 	return result
 }

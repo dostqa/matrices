@@ -6,28 +6,33 @@ import (
 )
 
 func main() {
-	// matrix := m.MatrixEnhance.Create([][]int{
-	// 	{4, 5, 6},
-	// 	{-1, 0, 3},
-	// 	{-1, 2, -1},
+
+	// var test = new(m.MatrixBase).Create([][]int{
+	// 	{0, -1, 2},
+	// 	{1, 0, -2},
+	// 	{3, 1, 2},
 	// })
 
-	// matrix := m.MatrixBase.Create(m.MatrixBase{}, [][]int{
-	// 	{4, 5, 6},
-	// 	{-1, 0, 3},
-	// 	{-1, 2, -1},
-	// })
+	// fmt.Println(&test)
 
-	matrix := new(m.MatrixEnhance).Create([][]int{
-		{4, 5, 6},
-		{-1, 0, 3},
-		{-1, 2, -1},
+	var test2 = new(m.MatrixEnhance).Create([][]int{
+		{0, -1, 2},
+		{1, 0, -2},
+		{3, 1, 2},
 	})
 
-	fmt.Println(matrix)
+	fmt.Println(test2)
+	test2.GetSubMatrix(1, 1).ShowInConsole()
 
-	// matrix.FindSubMatrix(2, 2).ShowInConsole()
-	// matrix.FindSubMatrix(2, 2).ShowInConsole()
+	// var matrix m.MatrixEnhance = m.MatrixEnhance{MatrixBase: m.MatrixBase{
+	// 	{0, -1, 2},
+	// 	{1, 0, -2},
+	// 	{3, 1, 2},
+	// }}
+
+	// // fmt.Println(matrix)
+
+	// matrix.ShowInConsole()
 
 	/*var B Matrix = Matrix{
 		{0, -1, 2},

@@ -75,12 +75,19 @@ func (matrix *MatrixBase) Initialize(input [][]int) {
 
 // метод создаёт матрицу
 func (matrix *MatrixBase) Create(input [][]int) MatrixBase {
-	matrix.PrepareToFill(cap(input), cap(input[0]))
+	// matrix.PrepareToFill(cap(input), cap(input[0]))
 
-	for i := range input {
-		copy((*matrix)[i], input[i])
+	(*matrix) = [][]int{
+		{0, -1, 2},
+		{1, 0, -2},
+		{3, 1, 2},
 	}
 
+	// for i := range input {
+	// copy((*matrix)[i], input[i])
+	// }
+
+	// fmt.Println(&matrix)
 	return *matrix
 }
 
