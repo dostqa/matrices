@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	m "matrices/matrix"
 )
 
@@ -15,16 +14,26 @@ func main() {
 
 	// fmt.Println(&test)
 
-	var test2 = new(m.MatrixEnhance).Create([][]int{
-		{1, 2, 3},
-		{4, 5, 6},
-		{7, 8, 9},
+	var test1 = new(m.MatrixEnhance).Create([][]int{
+		{0, -1, 2},
+		{1, 0, -2},
+		{3, 1, 2},
 	})
 
-	// test2.ShowInConsole()
 
-	test2.GetSubMatrix(2,2).ShowInConsole()
-	fmt.Println()
+
+	test2 := test1.TransposedImmutable()
+	
+	*test1.Get(0, 0) = 4
+
+	test1.ShowInConsole()
+
+	test2.ShowInConsole()
+	// var test2 = new(m.MatrixEnhance).Create([][]int{
+	// 	{1, 2, 3},
+	// 	{4, 5, 6},
+	// 	{7, 8, 9},
+	// })
 
 	// fmt.Println(test2)
 	// test2.ShowInConsole()

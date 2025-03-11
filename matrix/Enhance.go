@@ -139,14 +139,10 @@ func (matrix MatrixEnhance) SymmetricImmutable() MatrixEnhance {
 }
 
 // возвращает подматрицу матрицы
-func (matrix *MatrixEnhance) GetSubMatrix(coordRow int, coordCol int) MatrixEnhance {
+func (matrix MatrixEnhance) GetSubMatrix(coordRow int, coordCol int) MatrixEnhance {
 
-	result := *matrix
+	matrix.DelRow(coordRow)
+	matrix.DelColumn(coordCol)
 
-	result.DelRow(coordRow)
-	result.DelColumn(coordCol)
-
-	*matrix = result
-
-	return result
+	return matrix
 }
