@@ -1,20 +1,24 @@
 package matrix
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Определение типа MatrixBase
-type MatrixBase [][]int
+type MatrixBase struct {
+	data [][]int
+}
 
 /*=============== Взаимодействия с столбцами и строками ======================*/
 
 // возвращает количество строк в матрице
 func (matrix MatrixBase) CountRow() int {
-	return cap(matrix)
+	return cap(matrix.data)
 }
 
 // возвращает количество столбцов в матрице
 func (matrix MatrixBase) CountCol() int {
-	return cap(matrix[0])
+	return cap(matrix.data[0])
 }
 
 // метод удаляет строку
@@ -24,11 +28,11 @@ func (matrix *MatrixBase) DelRow(matrixRow int) MatrixBase {
 	result := *matrix
 
 	// выполняем сдвиг влево на один индекс
-	copy(result[matrixRow:], result[matrixRow+1:])
+	copy(result.data[matrixRow:], result.data[matrixRow+1:])
 	// удаляем последний элемент (записываем нулевое значение)
-	result[cap(result)-1] = nil
+	result.data[cap(result.data)-1] = nil
 	// усекаем срез
-	result = result[:cap(result)-1]
+	result.data = result.data[:cap(result.data)-1]
 
 	*matrix = result
 
@@ -42,17 +46,27 @@ func (matrix *MatrixBase) DelColumn(matrixRow int, matrixCol int) MatrixBase {
 
 	// выполняем сдвиг влево на один индекс
 	copy(
-		result[matrixRow][matrixCol:],
-		result[matrixRow][matrixCol+1:],
+		result.data[matrixRow][matrixCol:],
+		result.data[matrixRow][matrixCol+1:],
 	)
 	// удаляем последний элемент (записываем нулевое значение)
-	result[matrixRow][cap(result[matrixRow])-1] = 0
+	result.data[matrixRow][cap(result.data[matrixRow])-1] = 0
 	// усекаем срез
-	result[matrixRow] = result[matrixRow][:cap(result[matrixRow])-1]
+	result.data[matrixRow] = result.data[matrixRow][:cap(result.data[matrixRow])-1]
 
 	*matrix = result
 
 	return *matrix
+}
+
+// метод записи значения в ячейку
+func (matrix *MatrixBase) SetValue(row int, col int, value int) {
+	matrix.data[row-1][col-1] = value
+}
+
+// метод чтения значения из ячейки
+func (matrix MatrixBase) GetValue(row int, col int) int {
+	return matrix.data[row-1][col-1]
 }
 
 /*============ Методы инициализации и заполнения матрицы =============*/
@@ -67,21 +81,21 @@ func (matrix *MatrixBase) Fill(countRow int, countCol int) {
 
 // метод создаёт матрицу
 func (matrix *MatrixBase) Initialize(input [][]int) {
-	got := *matrix
-	got.PrepareToFill(cap(input), cap(input[0]))
+	result := *matrix
+	result.PrepareToFill(cap(input), cap(input[0]))
 
 	for i := range input {
-		copy(got[i], input[i])
+		copy(result.data[i], input[i])
 	}
 
-	*matrix = got
+	*matrix = result
 }
 
 // метод создаёт матрицу
 func (matrix *MatrixBase) Create(input [][]int) MatrixBase {
 	// matrix.PrepareToFill(cap(input), cap(input[0]))
 
-	(*matrix) = [][]int{
+	(*matrix).data = [][]int{
 		{0, -1, 2},
 		{1, 0, -2},
 		{3, 1, 2},
@@ -91,35 +105,37 @@ func (matrix *MatrixBase) Create(input [][]int) MatrixBase {
 
 // метод размечает массив для матрицы
 func (matrix *MatrixBase) PrepareToFill(countRow int, countCol int) {
-
+	result := *matrix
 	// создаем матрицу с заданным количеством строк и помещаем её в ячейку памяти, где хранится наша матрица
-	*(matrix) = make([][]int, countRow)
+	result.data = make([][]int, countRow)
 
 	// создаем в каждой строке нужное количество мест для элементов
-	for i := range *(matrix) {
-		(*matrix)[i] = make([]int, countCol)
+	for i := range result.data {
+		result.data[i] = make([]int, countCol)
 	}
+
+	*matrix = result
 }
 
 // Ввод матрицы через консоль
 func (matrix *MatrixBase) ConsoleInput() {
-	got := *matrix
+	result := *matrix
 
 	// Вводим значения в каждую ячейку матрицы
-	for matrixRow := range got {
-		for matrixCol := range got[matrixRow] {
+	for matrixRow := range result.data {
+		for matrixCol := range result.data[matrixRow] {
 
 			// метод ввода из консоли
-			fmt.Scan(&got[matrixRow][matrixCol])
+			fmt.Scan(&result.data[matrixRow][matrixCol])
 		}
 	}
 
-	*matrix = got
+	*matrix = result
 }
 
 // выводит матрицу в консоль в удобочитаемом виде
 func (matrix MatrixBase) ShowInConsole() {
-	for matrixRow := range matrix {
-		fmt.Println("Cтрока", matrixRow+1, matrix[matrixRow])
+	for matrixRow := range matrix.data {
+		fmt.Println("Cтрока", matrixRow+1, matrix.data[matrixRow])
 	}
 }

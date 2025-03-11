@@ -24,7 +24,7 @@ func main() {
 
 	test2.ShowInConsole()
 
-	// test2.DelRow(1).ShowInConsole()
+	test2.DelRow(1).ShowInConsole()
 
 	// fmt.Println(test2)
 	// test2.ShowInConsole()

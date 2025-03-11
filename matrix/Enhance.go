@@ -25,12 +25,12 @@ func (matrix MatrixEnhance) MultiplyOfMatrix(secondMatrix MatrixEnhance) MatrixE
 	result.PrepareToFill(matrix.CountRow(), secondMatrix.CountCol())
 
 	// непосредственно умножаем
-	for matrixRow := range result.MatrixBase {
-		for matrixCol := range result.MatrixBase[matrixRow] {
+	for matrixRow := range result.data {
+		for matrixCol := range result.data[matrixRow] {
 			for i := range secondMatrix.CountRow() {
-				result.MatrixBase[matrixRow][matrixCol] +=
-					matrix.MatrixBase[matrixRow][i] *
-						secondMatrix.MatrixBase[i][matrixCol]
+				result.data[matrixRow][matrixCol] +=
+					matrix.data[matrixRow][i] *
+						secondMatrix.data[i][matrixCol]
 			}
 
 		}
@@ -54,11 +54,11 @@ func (matrix MatrixEnhance) SumOfMatrix(secondMatrix MatrixEnhance) MatrixEnhanc
 	result.PrepareToFill(matrix.CountRow(), matrix.CountCol())
 
 	// непосредственно складываем
-	for matrixRow := range result.MatrixBase {
-		for matrixCol := range result.MatrixBase[matrixRow] {
-			result.MatrixBase[matrixRow][matrixCol] =
-				matrix.MatrixBase[matrixRow][matrixCol] +
-					secondMatrix.MatrixBase[matrixRow][matrixCol]
+	for matrixRow := range result.data {
+		for matrixCol := range result.data[matrixRow] {
+			result.data[matrixRow][matrixCol] =
+				matrix.data[matrixRow][matrixCol] +
+					secondMatrix.data[matrixRow][matrixCol]
 		}
 	}
 
@@ -80,11 +80,11 @@ func (matrix MatrixEnhance) DiffOfMatrix(secondMatrix MatrixEnhance) MatrixEnhan
 	result.PrepareToFill(matrix.CountRow(), matrix.CountCol())
 
 	// непосредственно вычитаем
-	for matrixRow := range result.MatrixBase {
-		for matrixCol := range result.MatrixBase[matrixRow] {
-			result.MatrixBase[matrixRow][matrixCol] =
-				matrix.MatrixBase[matrixRow][matrixCol] -
-					secondMatrix.MatrixBase[matrixRow][matrixCol]
+	for matrixRow := range result.data {
+		for matrixCol := range result.data[matrixRow] {
+			result.data[matrixRow][matrixCol] =
+				matrix.data[matrixRow][matrixCol] -
+					secondMatrix.data[matrixRow][matrixCol]
 		}
 	}
 
@@ -100,10 +100,10 @@ func (matrix MatrixEnhance) MultiplyImmutable(multiplier int) MatrixEnhance {
 	result.PrepareToFill(matrix.CountRow(), matrix.CountCol())
 
 	// умножаем каждый элемент матрицы на число num
-	for matrixRow := range result.MatrixBase {
-		for matrixCol := range result.MatrixBase[matrixRow] {
-			result.MatrixBase[matrixRow][matrixCol] =
-				matrix.MatrixBase[matrixRow][matrixCol] *
+	for matrixRow := range result.data {
+		for matrixCol := range result.data[matrixRow] {
+			result.data[matrixRow][matrixCol] =
+				matrix.data[matrixRow][matrixCol] *
 					multiplier
 		}
 	}
@@ -122,9 +122,9 @@ func (matrix MatrixEnhance) TransposedImmutable() MatrixEnhance {
 	result.PrepareToFill(matrix.CountCol(), matrix.CountRow())
 
 	// непосредственно транспонируем
-	for matrixRow := range result.MatrixBase {
-		for matrixCol := range result.MatrixBase[matrixRow] {
-			result.MatrixBase[matrixCol][matrixRow] = matrix.MatrixBase[matrixRow][matrixCol]
+	for matrixRow := range result.data {
+		for matrixCol := range result.data[matrixRow] {
+			result.data[matrixCol][matrixRow] = matrix.data[matrixRow][matrixCol]
 		}
 	}
 
@@ -145,7 +145,7 @@ func (matrix MatrixEnhance) GetSubMatrix(coordRow int, coordCol int) MatrixEnhan
 	// fmt.Println(matrix)
 	result.PrepareToFill(matrix.CountRow()-1, matrix.CountCol()-1)
 
-	for matrixRow := range matrix.MatrixBase {
+	for matrixRow := range matrix.data {
 		switch {
 		case matrixRow == coordRow-1:
 			// удаляем строку
@@ -155,8 +155,8 @@ func (matrix MatrixEnhance) GetSubMatrix(coordRow int, coordCol int) MatrixEnhan
 		}
 	}
 
-	for matrixRow := range matrix.MatrixBase {
-		for matrixCol := range matrix.MatrixBase[matrixRow] {
+	for matrixRow := range matrix.data {
+		for matrixCol := range matrix.data[matrixRow] {
 			switch {
 			case matrixCol == coordCol-1:
 				// удаляем столбец
