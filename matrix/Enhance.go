@@ -4,17 +4,9 @@ type MatrixEnhance struct {
 	MatrixBase
 }
 
-// // Конструктор для MatrixEnhance
-// func NewMatrixEnhance(data [][]int) MatrixEnhance {
-// 	var matrix MatrixEnhance
-// 	matrix.Initialize(data)
-// 	return matrix
-// }
-
+// Конструктор
 func (matrix *MatrixEnhance) Create(input [][]int) MatrixEnhance {
 	(*matrix).MatrixBase = new(MatrixBase).Create(input)
-	// matrix.MatrixBase =
-	// fmt.Println(&matrix)
 	return *matrix
 }
 

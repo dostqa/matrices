@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	m "matrices/matrix"
 )
 
@@ -15,14 +14,20 @@ func main() {
 
 	// fmt.Println(&test)
 
-	var test2 = new(m.MatrixEnhance).Create([][]int{
-		{0, -1, 2},
-		{1, 0, -2},
-		{3, 1, 2},
-	})
 
-	fmt.Println(test2)
-	test2.GetSubMatrix(1, 1).ShowInConsole()
+
+	var test2 = new(m.MatrixEnhance).Create([][]int{
+			{1, 2, 3},
+			{4, 5, 6},
+			{7, 8, 9},
+		})
+
+	test2.ShowInConsole()
+
+	// test2.DelRow(1).ShowInConsole()
+
+	// fmt.Println(test2)
+	// test2.ShowInConsole()
 
 	// var matrix m.MatrixEnhance = m.MatrixEnhance{MatrixBase: m.MatrixBase{
 	// 	{0, -1, 2},

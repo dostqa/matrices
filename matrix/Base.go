@@ -18,7 +18,7 @@ func (matrix MatrixBase) CountCol() int {
 }
 
 // метод удаляет строку
-func (matrix *MatrixBase) DelRow(matrixRow int) {
+func (matrix *MatrixBase) DelRow(matrixRow int) MatrixBase {
 
 	matrixRow -= 1
 	result := *matrix
@@ -31,10 +31,12 @@ func (matrix *MatrixBase) DelRow(matrixRow int) {
 	result = result[:cap(result)-1]
 
 	*matrix = result
+
+	return *matrix
 }
 
 // метод удаляет столбец
-func (matrix *MatrixBase) DelColumn(matrixRow int, matrixCol int) {
+func (matrix *MatrixBase) DelColumn(matrixRow int, matrixCol int) MatrixBase {
 	result := *matrix
 	matrixCol -= 1
 
@@ -49,6 +51,8 @@ func (matrix *MatrixBase) DelColumn(matrixRow int, matrixCol int) {
 	result[matrixRow] = result[matrixRow][:cap(result[matrixRow])-1]
 
 	*matrix = result
+
+	return *matrix
 }
 
 /*============ Методы инициализации и заполнения матрицы =============*/
@@ -82,12 +86,6 @@ func (matrix *MatrixBase) Create(input [][]int) MatrixBase {
 		{1, 0, -2},
 		{3, 1, 2},
 	}
-
-	// for i := range input {
-	// copy((*matrix)[i], input[i])
-	// }
-
-	// fmt.Println(&matrix)
 	return *matrix
 }
 
@@ -106,7 +104,6 @@ func (matrix *MatrixBase) PrepareToFill(countRow int, countCol int) {
 // Ввод матрицы через консоль
 func (matrix *MatrixBase) ConsoleInput() {
 	got := *matrix
-	fmt.Println("Введите матрицу: ")
 
 	// Вводим значения в каждую ячейку матрицы
 	for matrixRow := range got {
